@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>单页APP</title>
+    <script src="react.js"></script>
+    <script src="react-dom.js"></script>
+    <script src="browser.min.js"></script>
+    <script src="ReactRouter.min.js"></script>
+    <style>
+        body{
+             background: #66CCFF;
+        }
+        .shop li{
+            list-style: none;
+            display: inline;
+            padding:10px;
+            font-family: sans-serif;
+            font-size: 18px;
+        }
+        .shop li:hover{
+            background: blue;
+        }
+        p{
+            padding:10px;
+            font-family: "Adobe Arabic";
+            font-size: 16px;
+            margin-left: 50px;
+        }
+        .content{
+            background: #fff;
+        }
+        .todoListMain .header input {
+            padding: 10px;
+            font-size: 16px;
+            border: 2px solid #FFF;
+        }
+
+        .todoListMain .header button {
+            padding: 10px;
+            font-size: 16px;
+            margin: 10px;
+            background-color: #0066FF;
+            color: #FFF;
+            border: 2px solid #0066FF;
+        }
+
+        .todoListMain .header button:hover {
+            background-color: #003399;
+            border: 2px solid #003399;
+            cursor: pointer;
+        }
+
+        .todoListMain .theList {
+            list-style: none;
+            padding-left: 0;
+            width: 255px;
+        }
+
+        .todoListMain .theList li {
+            color: #333;
+            background-color: rgba(255, 2555, 255, .5);
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div id="contain"></div>
+        <script type="text/babel" >
+            var {
+                Router,
+                Route,
+                Link,
+                IndexLink,
+                IndexRoute,
+                hashHistory
+            }=ReactRouter;
+
+
+            var Home = React.createClass({
+                render:function(){
+                    return(
+                        <div>
+                            <p>三鲜米线</p>
+                            <p>牛肉米线</p>
+                            <p>泡椒肥牛米线</p>
+                            <p>虾饺鱼丸米线</p>
+                        </div>
+                    )
+                }
+            });
+            var sjmc = React.createClass({
+                render:function(){
+                    return(
+                        <div>
+                            <p>肥牛套餐</p>
+                            <p>一个人的幸福</p>
+                            <p>一人豪华套餐</p>
+                            <p>什锦冒菜</p>
+                        </div>
+                    )
+                }
+            });
+            var xhj = React.createClass({
+                render:function(){
+                    return(
+                        <div>
+                            <p>辣子鸡丁饭</p>
+                            <p>至尊挚爱小炒肉</p>
+                            <p>招牌黑椒卤肉饭</p>
+                            <p>尖椒香爆卤肉饭</p>
+                            <p>咖喱鸡肉鸡排双拼</p>
+                        </div>
+                    )
+                }
+            });
+            var lxs =React.createClass({
+                render:function(){
+                    return(
+                        <div>
+                            <p>经典石锅拌饭</p>
+                            <p>肥牛拌饭</p>
+                            <p>五花肉拌饭</p>
+                        </div>
+                    )
+                }
+            });
+            var App = React.createClass({
+                render:function(){
+                    return(
+                        <div>
+                            <h2>商家信息</h2>
+                            <ul className="shop">
+                                <li><IndexLink activeClassName="active" to="/">巴哥米线</IndexLink></li>
+                                <li><Link activeClassName="active" to="/sjmc">神技冒菜</Link></li>
+                                <li><Link activeClassName="active" to="/xhj">小猴家的饭</Link></li>
+                                <li><Link activeClassName="active" to="/lxs">朴先生韩式料理</Link></li>
+
+                            </ul>
+                            <div className="content">
+                                {this.props.children}
+                            </div>
+                            <ToDoList/>                    {/*组件嵌套*/}
+                        </div>
+                    );
+                }
+            });
+            var TodoItems = React.createClass({                     /*将输入的内容以列表的形式在下面显示出来*/
+                render:function() {
+                    var todoEntries = this.props.entries;           /*引入一个变量记录传递过来的数据*/
+                    function createTasks(item) {
+                        return (
+                            <li key={item.key}>{item.text}</li>
+                        );
+                    }
+
+                    var listItems = todoEntries.map(createTasks);  /*遍历todoEntries中的数据并且调用createTasks函数，传递给listItems*/
+
+                    return (
+                        <ul className="theList">
+                            {listItems}
+                        </ul>
+                    );
+                }
+            });
+
+            var ToDoList = React.createClass({
+                getInitialState: function () {
+                    return {
+                        items: []
+                    }
+                },
+
+
+                addItem :function(e) {                     /*e代表的是form表单*/
+                    var itemArray = this.state.items;
+                    itemArray.push({
+                        text: this._inputElement.value,
+                        key: Date.now()                      /*key是唯一标志符*/
+                    });
+
+                    this.setState({
+                        items: itemArray                      /*产生新的数据*/
+                    });
+
+                    this._inputElement.value = "";           /*清空输入框*/
+                    this._inputElement.focus();              /*输入框获得焦点*/
+
+                    e.preventDefault();
+                },
+
+                render:function() {
+                    return (
+                        <div className="todoListMain">
+                            <div className="header">
+                                <form onSubmit={this.addItem}>
+                                    <input
+                                        ref={
+                                            (a)=>this._inputElement
+                                                = a
+                                        }
+                                        placeholder
+                                            ="请输入一个任务"/>
+                                    <button type="submit">
+                                        添加
+                                    </button>
+                                </form>
+                            </div>
+
+                            <TodoItems entries={this.state.items}/>    {/*将items中的内容传递给TodoItems*/}
+                        </div>
+                    );
+                }
+            });
+
+           ReactDOM.render(
+                <Router history={hashHistory}>
+                    <Route path="/" component={App}>
+                    <IndexRoute  component={Home}/>             {/*首页*/}
+                     <Route path="sjmc" component={sjmc}/>
+                        <Route path="xhj" component={xhj}/>
+                        <Route path="lxs" component={lxs}/>
+                    </Route>
+                </Router>,
+
+                document.getElementById("contain")
+            )
+        </script>
+
+</body>
+</html>

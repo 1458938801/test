@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>透明度</title>
+    <script src="react.js"></script>
+    <script src="react-dom.js"></script>
+    <script SRC="browser.min.js"></script>
+</head>
+<body>
+<div id="contain"></div>
+<script type="text/babel">
+    class AnimateApp extends React.Component{
+        constructor(props){
+            super(props);
+            this.state={
+                opacity:1.0
+            }
+        }
+        componentDidMount(){
+            //启动定时器
+            setInterval(()=>{
+                //获得当前的透明度
+                let opacity=this.state.opacity;
+                //透明度变化
+                opacity -= 0.05;
+                //判断透明度
+                if(opacity<=0.05){
+                    opacity=1.0
+                }
+                //更新state
+                this.setState({
+                    opacity:opacity
+                })
+
+            },100)
+        }
+        render(){
+            return <p style={{opacity:this.state.opacity}}>{this.props.msg}</p>
+
+        }
+    }
+    //const msg="萨拉嘿哟";
+    ReactDOM.render(
+        <AnimateApp msg="萨拉嘿哟"/>,document.getElementById("contain")
+    )
+</script>
+
+</body>
+</html>
